@@ -65,12 +65,16 @@ class TraceLocationActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        getLocationAccess()
-        /*// Add a marker in Sydney and move the camera
-        val sydney = LatLng(1.34, 103.96)
-        val zoomLevel = 10f
+        // Get user current location
+       // getLocationAccess()
+        // Add a marker in Sydney and move the camera
+        val latitude = 26.76
+        val longitude = 83.37
+        val sydney = LatLng(latitude, longitude)
+        val zoomLevel = 17.0f
        // val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Changi Green Condomenium, Singapore"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,zoomLevel))*/
+        mMap.addMarker(MarkerOptions().position(sydney).title("This is your current location."))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,zoomLevel))
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(zoomLevel));
     }
 }
