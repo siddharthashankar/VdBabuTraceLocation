@@ -2,33 +2,28 @@ package com.codingwithsid.tracelocation.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.codingwithsid.tracelocation.R
-
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.codingwithsid.tracelocation.network.tracecurrentlocation.UserLatLong
 
 class TraceLocationActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private val LOCATION_PERMISSION_REQUEST = 1
-
-    private fun getLocationAccess() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mMap.isMyLocationEnabled = true
-        }
-        else
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST)
-    }
-
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (requestCode == LOCATION_PERMISSION_REQUEST) {
@@ -48,10 +43,12 @@ class TraceLocationActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trace_locationn)
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
     }
 
     /**
@@ -65,16 +62,14 @@ class TraceLocationActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        // Get user current location
-       // getLocationAccess()
         // Add a marker in Sydney and move the camera
-        val latitude = 26.76
-        val longitude = 83.37
-        val sydney = LatLng(latitude, longitude)
+        Log.d("Debug:" ,"Your Location: lat: "+ UserLatLong.latitude+"Long: "+ UserLatLong.longitude)
+        val latitude = UserLatLong.latitude
+        val longitude = UserLatLong.longitude
+        val currentLatLng = LatLng(latitude, longitude)
         val zoomLevel = 17.0f
-       // val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("This is your current location."))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,zoomLevel))
+        mMap.addMarker(MarkerOptions().position(currentLatLng).title("This is your current location."))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, zoomLevel))
         mMap.animateCamera(CameraUpdateFactory.zoomTo(zoomLevel));
     }
 }
